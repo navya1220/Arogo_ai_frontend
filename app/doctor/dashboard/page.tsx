@@ -16,14 +16,14 @@ interface Appointment {
 }
 
 export default function DoctorDashboardPage() {
-  const [appointments, setAppointments] = useState<Appointment[]>([]) // Define state with Appointment[]
+  const [appointments, setAppointments] = useState<Appointment[]>([]) 
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
         const response = await fetch("https://arogo-ai-2.onrender.com/api/patients")
-        const data: Appointment[] = await response.json() // Ensure response matches the type
+        const data: Appointment[] = await response.json() 
         setAppointments(data)
       } catch (error) {
         console.error("Error fetching appointments:", error)

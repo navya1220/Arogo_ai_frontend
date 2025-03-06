@@ -49,7 +49,6 @@ export default function LoginPage() {
         description: "You've been logged in successfully.",
       })
 
-      // Redirect based on role
       if (role === "patient") {
         router.push("/patient/search")
       } else {
