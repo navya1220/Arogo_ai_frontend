@@ -18,7 +18,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
 import { useToast } from "@/components/ui/use-toast"
 
-const API_URL = "http://localhost:5000/api/doctors/"
+const API_URL = "https://arogo-ai-2.onrender.com/api/doctors/"
 
 export default function DoctorProfilePage() {
   const params = useParams()

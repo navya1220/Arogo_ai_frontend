@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 // API Endpoint
-const API_URL = "http://localhost:5000/api/doctors/";
+const API_URL = "https://arogo-ai-2.onrender.com/api/doctors/";
 
 export default function DoctorSearchPage() {
   const [searchTerm, setSearchTerm] = useState("");

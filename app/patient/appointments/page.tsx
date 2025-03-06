@@ -16,7 +16,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useToast } from "@/components/ui/use-toast"
 import axios from "axios"
 
-const API_URL = "http://localhost:5000/api/appointments"
+const API_URL = "https://arogo-ai-2.onrender.com/api/appointments"
 
 export default function AppointmentsPage() {
   const [appointments, setAppointments] = useState([])

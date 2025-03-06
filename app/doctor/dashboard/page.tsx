@@ -12,7 +12,7 @@ export default function DoctorDashboardPage() {
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/patients")
+        const response = await fetch("https://arogo-ai-2.onrender.com/api/patients")
         const data = await response.json()
         setAppointments(data)
       } catch (error) {

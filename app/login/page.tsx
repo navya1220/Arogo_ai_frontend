@@ -26,7 +26,7 @@ export default function LoginPage() {
     const password = formData.get("password") as string
 
     try {
-      const response = await fetch("http://localhost:5000/api/auth/login", {
+      const response = await fetch("https://arogo-ai-2.onrender.com/api/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
