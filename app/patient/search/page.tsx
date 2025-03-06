@@ -84,7 +84,7 @@ export default function DoctorSearchPage() {
       </SelectTrigger>
       <SelectContent className="absolute z-20 bg-white shadow-lg border rounded-md">
         {specialties.map((spec) => (
-          <SelectItem key={spec} value={spec}>
+          <SelectItem key={spec} value={spec} className="text-black">
             {spec}
           </SelectItem>
         ))}
@@ -100,7 +100,7 @@ export default function DoctorSearchPage() {
       </SelectTrigger>
       <SelectContent className="absolute z-20 bg-white shadow-lg border rounded-md">
         {locations.map((loc) => (
-          <SelectItem key={loc} value={loc}>
+          <SelectItem key={loc} value={loc} className="text-black">
             {loc}
           </SelectItem>
         ))}
@@ -108,6 +108,7 @@ export default function DoctorSearchPage() {
     </Select>
   </div>
 </div>
+
 
       {loading ? (
         <div className="text-center py-12">
