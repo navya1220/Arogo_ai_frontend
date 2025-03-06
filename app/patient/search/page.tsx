@@ -1,23 +1,33 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardFooter } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 // API Endpoint
 const API_URL = "https://arogo-ai-2.onrender.com/api/doctors/";
 
+// Define the Doctor interface
+interface Doctor {
+  _id: string;
+  name: string;
+  specialty: string;
+  location: string;
+  experience: number;
+  image?: string;
+}
+
 export default function DoctorSearchPage() {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [specialty, setSpecialty] = useState("All Specialties");
-  const [location, setLocation] = useState("All Locations");
-  const [doctors, setDoctors] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [specialty, setSpecialty] = useState<string>("All Specialties");
+  const [location, setLocation] = useState<string>("All Locations");
+  const [doctors, setDoctors] = useState<Doctor[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string>("");
 
   // Fetch doctors from backend
   useEffect(() => {
@@ -25,11 +35,11 @@ export default function DoctorSearchPage() {
       try {
         const response = await fetch(API_URL);
         if (!response.ok) throw new Error("Failed to fetch doctors");
-        
-        const data = await response.json();
+
+        const data: Doctor[] = await response.json();
         setDoctors(data);
       } catch (err) {
-        setError(err.message);
+        setError((err as Error).message);
       } finally {
         setLoading(false);
       }
@@ -39,8 +49,8 @@ export default function DoctorSearchPage() {
   }, []);
 
   // Extract unique specialties and locations from API data
-  const specialties = ["All Specialties", ...new Set(doctors.map(doc => doc.specialty))];
-  const locations = ["All Locations", ...new Set(doctors.map(doc => doc.location))];
+  const specialties = ["All Specialties", ...new Set(doctors.map((doc) => doc.specialty))];
+  const locations = ["All Locations", ...new Set(doctors.map((doc) => doc.location))];
 
   // Filter doctors based on search criteria
   const filteredDoctors = doctors.filter((doctor) => {
@@ -142,5 +152,5 @@ export default function DoctorSearchPage() {
         </div>
       )}
     </div>
-  )
+  );
 }

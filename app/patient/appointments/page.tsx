@@ -18,45 +18,55 @@ import axios from "axios"
 
 const API_URL = "https://arogo-ai-2.onrender.com/api/appointments"
 
+// Define the Appointment interface
+interface Appointment {
+  _id: string;
+  doctorName: string;
+  specialty: string;
+  date: string;
+  time: string;
+  status: "upcoming" | "past";
+}
+
 export default function AppointmentsPage() {
-  const [appointments, setAppointments] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [appointmentToCancel, setAppointmentToCancel] = useState<string | null>(null)
-  const { toast } = useToast()
+  const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [appointmentToCancel, setAppointmentToCancel] = useState<string | null>(null);
+  const { toast } = useToast();
 
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
-        const response = await axios.get(API_URL)
-        setAppointments(response.data) 
+        const response = await axios.get<Appointment[]>(API_URL);
+        setAppointments(response.data);
       } catch (error) {
-        console.error("Error fetching appointments:", error)
+        console.error("Error fetching appointments:", error);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
-    fetchAppointments()
-  }, [])
+    };
+    fetchAppointments();
+  }, []);
 
   const handleCancelAppointment = async () => {
-    if (!appointmentToCancel) return
+    if (!appointmentToCancel) return;
     try {
-      await axios.delete(`${API_URL}/${appointmentToCancel}`)
+      await axios.delete(`${API_URL}/${appointmentToCancel}`);
       setAppointments((prevAppointments) =>
-        prevAppointments.filter((app) => app._id !== appointmentToCancel) // Ensure `_id`
-      )
+        prevAppointments.filter((app) => app._id !== appointmentToCancel) // Fixed _id issue
+      );
       toast({
         title: "Appointment Cancelled",
         description: "Your appointment has been successfully cancelled.",
-      })
+      });
     } catch (error) {
-      console.error("Error cancelling appointment:", error.response?.data || error)
+      console.error("Error cancelling appointment:", error);
     }
-    setAppointmentToCancel(null) 
-  }
+    setAppointmentToCancel(null);
+  };
 
-  const upcomingAppointments = appointments.filter((app) => app.status === "upcoming")
-  const pastAppointments = appointments.filter((app) => app.status === "past")
+  const upcomingAppointments = appointments.filter((app) => app.status === "upcoming");
+  const pastAppointments = appointments.filter((app) => app.status === "past");
 
   return (
     <div className="p-6">
@@ -86,7 +96,10 @@ export default function AppointmentsPage() {
                           </p>
                         </div>
 
-                        <Dialog open={appointmentToCancel === appointment._id} onOpenChange={() => setAppointmentToCancel(null)}>
+                        <Dialog
+                          open={appointmentToCancel === appointment._id}
+                          onOpenChange={() => setAppointmentToCancel(null)}
+                        >
                           <DialogTrigger asChild>
                             <Button
                               variant="outline"
@@ -100,8 +113,8 @@ export default function AppointmentsPage() {
                             <DialogHeader>
                               <DialogTitle>Cancel Appointment</DialogTitle>
                               <DialogDescription>
-                                Are you sure you want to cancel your appointment with {appointment.doctorName} on{" "}
-                                {appointment.date} at {appointment.time}?
+                                Are you sure you want to cancel your appointment with{" "}
+                                {appointment.doctorName} on {appointment.date} at {appointment.time}?
                               </DialogDescription>
                             </DialogHeader>
                             <DialogFooter>
@@ -157,5 +170,5 @@ export default function AppointmentsPage() {
         </Tabs>
       )}
     </div>
-  )
+  );
 }
