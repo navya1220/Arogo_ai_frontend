@@ -65,49 +65,49 @@ export default function DoctorSearchPage() {
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-6">Find a Doctor</h1>
 
-      <div className="grid gap-4 md:grid-cols-3 mb-8">
-        <div>
-          <Label htmlFor="search">Doctor's Name</Label>
-          <Input
-            id="search"
-            placeholder="Search by name"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
+      <div className="grid gap-4 md:grid-cols-3 mb-8 relative">
+  <div>
+    <Label htmlFor="search">Doctor's Name</Label>
+    <Input
+      id="search"
+      placeholder="Search by name"
+      value={searchTerm}
+      onChange={(e) => setSearchTerm(e.target.value)}
+    />
+  </div>
 
-        <div>
-          <Label htmlFor="specialty">Specialty</Label>
-          <Select value={specialty} onValueChange={setSpecialty}>
-            <SelectTrigger id="specialty">
-              <SelectValue placeholder="Select specialty" />
-            </SelectTrigger>
-            <SelectContent>
-              {specialties.map((spec) => (
-                <SelectItem key={spec} value={spec}>
-                  {spec}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+  <div className="relative">
+    <Label htmlFor="specialty">Specialty</Label>
+    <Select value={specialty} onValueChange={setSpecialty}>
+      <SelectTrigger id="specialty" className="relative z-10">
+        <SelectValue placeholder="Select specialty" />
+      </SelectTrigger>
+      <SelectContent className="absolute z-20 bg-white shadow-lg border rounded-md">
+        {specialties.map((spec) => (
+          <SelectItem key={spec} value={spec}>
+            {spec}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
+  </div>
 
-        <div>
-          <Label htmlFor="location">Location</Label>
-          <Select value={location} onValueChange={setLocation}>
-            <SelectTrigger id="location">
-              <SelectValue placeholder="Select location" />
-            </SelectTrigger>
-            <SelectContent>
-              {locations.map((loc) => (
-                <SelectItem key={loc} value={loc}>
-                  {loc}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
+  <div className="relative">
+    <Label htmlFor="location">Location</Label>
+    <Select value={location} onValueChange={setLocation}>
+      <SelectTrigger id="location" className="relative z-10">
+        <SelectValue placeholder="Select location" />
+      </SelectTrigger>
+      <SelectContent className="absolute z-20 bg-white shadow-lg border rounded-md">
+        {locations.map((loc) => (
+          <SelectItem key={loc} value={loc}>
+            {loc}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
+  </div>
+</div>
 
       {loading ? (
         <div className="text-center py-12">
