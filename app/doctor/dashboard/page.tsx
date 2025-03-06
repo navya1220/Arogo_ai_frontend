@@ -5,15 +5,25 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
+interface Appointment {
+  id: string
+  patientName: string
+  date: string
+  time: string
+  age: number
+  reason: string
+  status: "upcoming" | "past"
+}
+
 export default function DoctorDashboardPage() {
-  const [appointments, setAppointments] = useState([])
+  const [appointments, setAppointments] = useState<Appointment[]>([]) // Define state with Appointment[]
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
         const response = await fetch("https://arogo-ai-2.onrender.com/api/patients")
-        const data = await response.json()
+        const data: Appointment[] = await response.json() // Ensure response matches the type
         setAppointments(data)
       } catch (error) {
         console.error("Error fetching appointments:", error)
