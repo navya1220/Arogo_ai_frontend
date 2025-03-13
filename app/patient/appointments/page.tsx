@@ -48,22 +48,34 @@ export default function AppointmentsPage() {
     fetchAppointments();
   }, []);
 
-  const handleCancelAppointment = async () => {
-    if (!appointmentToCancel) return;
+  const handleCancelAppointment = async (id: string) => {
+    if (!id) return;
+  
     try {
-      await axios.delete(`${API_URL}/${appointmentToCancel}`);
-      setAppointments((prevAppointments) =>
-        prevAppointments.filter((app) => app._id !== appointmentToCancel) // Fixed _id issue
-      );
+      console.log("Attempting to cancel appointment with ID:", id);
+  
+      const response = await axios.delete(`${API_URL}/${id}`);
+  
+      if (response.status === 200) {
+        setAppointments((prev) => prev.filter((app) => app._id !== id));
+        toast({
+          title: "Appointment Cancelled",
+          description: "Your appointment has been successfully cancelled.",
+        });
+      } else {
+        throw new Error(`Failed to delete appointment: ${response.statusText}`);
+      }
+    } catch (error: any) {
+      console.error("Error cancelling appointment:", error.response ? error.response.data : error.message);
       toast({
-        title: "Appointment Cancelled",
-        description: "Your appointment has been successfully cancelled.",
+        title: "Error",
+        description: error.response?.data?.message || "Failed to cancel the appointment. Please try again.",
+        variant: "destructive",
       });
-    } catch (error) {
-      console.error("Error cancelling appointment:", error);
     }
     setAppointmentToCancel(null);
   };
+  
 
   const upcomingAppointments = appointments.filter((app) => app.status === "upcoming");
   const pastAppointments = appointments.filter((app) => app.status === "past");
@@ -82,62 +94,63 @@ export default function AppointmentsPage() {
           </TabsList>
 
           <TabsContent value="upcoming">
-            {upcomingAppointments.length > 0 ? (
-              <div className="grid gap-4">
-                {upcomingAppointments.map((appointment) => (
-                  <Card key={appointment._id}>
-                    <CardContent className="p-6">
-                      <div className="flex flex-col md:flex-row md:items-center md:justify-between">
-                        <div>
-                          <h3 className="font-bold">{appointment.doctorName}</h3>
-                          <p className="text-sm text-muted-foreground">{appointment.specialty}</p>
-                          <p className="text-sm">
-                            {appointment.date} at {appointment.time}
-                          </p>
-                        </div>
+  {upcomingAppointments.length > 0 ? (
+    <div className="grid gap-4">
+      {upcomingAppointments.map((appointment) => (
+        <Card key={appointment._id}>  {/* Ensure key is unique */}
+          <CardContent className="p-6">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+              <div>
+                <h3 className="font-bold">{appointment.doctorName}</h3>
+                <p className="text-sm text-muted-foreground">{appointment.specialty}</p>
+                <p className="text-sm">
+                  {appointment.date} at {appointment.time}
+                </p>
+              </div>
 
-                        <Dialog
-                          open={appointmentToCancel === appointment._id}
-                          onOpenChange={() => setAppointmentToCancel(null)}
-                        >
-                          <DialogTrigger asChild>
-                            <Button
-                              variant="outline"
-                              className="mt-4 md:mt-0"
-                              onClick={() => setAppointmentToCancel(appointment._id)}
-                            >
-                              Cancel Appointment
-                            </Button>
-                          </DialogTrigger>
-                          <DialogContent>
-                            <DialogHeader>
-                              <DialogTitle>Cancel Appointment</DialogTitle>
-                              <DialogDescription>
-                                Are you sure you want to cancel your appointment with{" "}
-                                {appointment.doctorName} on {appointment.date} at {appointment.time}?
-                              </DialogDescription>
-                            </DialogHeader>
-                            <DialogFooter>
-                              <Button variant="outline" onClick={() => setAppointmentToCancel(null)}>
-                                Keep Appointment
-                              </Button>
-                              <Button variant="destructive" onClick={handleCancelAppointment}>
-                                Cancel Appointment
-                              </Button>
-                            </DialogFooter>
-                          </DialogContent>
-                        </Dialog>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-12">
-                <p className="text-muted-foreground">You have no upcoming appointments.</p>
-              </div>
-            )}
-          </TabsContent>
+              <Dialog
+                open={appointmentToCancel === appointment._id}
+                onOpenChange={(open) => !open && setAppointmentToCancel(null)}
+              >
+                <DialogTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className="mt-4 md:mt-0"
+                    onClick={() => setAppointmentToCancel(appointment._id)}
+                  >
+                    Cancel Appointment
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Cancel Appointment</DialogTitle>
+                    <DialogDescription>
+                      Are you sure you want to cancel your appointment with{" "}
+                      {appointment.doctorName} on {appointment.date} at {appointment.time}?
+                    </DialogDescription>
+                  </DialogHeader>
+                  <DialogFooter>
+                    <Button variant="outline" onClick={() => setAppointmentToCancel(null)}>
+                      Keep Appointment
+                    </Button>
+                    <Button variant="destructive" onClick={() => handleCancelAppointment(appointment._id)}>
+                      Cancel Appointment
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+            </div>
+          </CardContent>
+        </Card>
+      ))}
+    </div>
+  ) : (
+    <div className="text-center py-12">
+      <p className="text-muted-foreground">You have no upcoming appointments.</p>
+    </div>
+  )}
+</TabsContent>
+
 
           <TabsContent value="past">
             {pastAppointments.length > 0 ? (

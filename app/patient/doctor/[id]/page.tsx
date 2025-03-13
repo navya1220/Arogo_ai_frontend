@@ -75,11 +75,14 @@ export default function DoctorProfilePage() {
         title: "Error",
         description: "Please select a time slot",
         variant: "destructive",
-      })
-      return
+      });
+      return;
     }
   
-    const [date, time] = selectedSlot.split("-")
+    const [date, time] = selectedSlot.split("-");
+    const token = localStorage.getItem("token"); 
+    const email = localStorage.getItem("email");
+
   
     const appointmentData = {
       doctorName: doctor.name,
@@ -87,35 +90,41 @@ export default function DoctorProfilePage() {
       date,
       time,
       reason: "Consultation",
-    }
+      email,
+    };
   
     try {
+    
       const response = await fetch("https://arogo-ai-2.onrender.com/api/appointments", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}` 
+        },
         body: JSON.stringify(appointmentData),
-      })
+      });
   
       if (!response.ok) {
-        const errorResponse = await response.json()
-        throw new Error(errorResponse.message || "Failed to book appointment")
+        const errorResponse = await response.json();
+        throw new Error(errorResponse.message || "Failed to book appointment");
       }
   
       toast({
         title: "Appointment Booked!",
         description: `Your appointment with ${doctor.name} has been scheduled.`,
-      })
+      });
   
-      setIsDialogOpen(false)
-      router.push("/patient/appointments")
-    } catch (err: any) {
+      setIsDialogOpen(false);
+      router.push("/patient/appointments");
+    } catch (err) {
       toast({
         title: "Error",
         description: err.message || "Failed to book appointment",
         variant: "destructive",
-      })
+      });
     }
-  }
+  };
+  
   
   return (
     <div className="p-6">

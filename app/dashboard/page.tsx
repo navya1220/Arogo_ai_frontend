@@ -12,7 +12,6 @@ export default function DashboardPage() {
   const { toast } = useToast()
 
   useEffect(() => {
-    // Check if user is authenticated
     const isAuthenticated = localStorage.getItem("isAuthenticated") === "true"
 
     if (!isAuthenticated) {

@@ -40,7 +40,6 @@ export default function LoginPage() {
         throw new Error(data.message || "Login failed")
       }
 
-      // Store authentication info
       localStorage.setItem("token", data.token)
       localStorage.setItem("userRole", role)
 
